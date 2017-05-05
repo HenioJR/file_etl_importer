@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"os"
 	"strings"
+
+	"file_etl_importer/connector"
 )
 
 type file struct {
@@ -64,6 +66,8 @@ func createFields(fields string, f *file) {
 
 	fmt.Println("file fields length: ", f.fieldsLenght)
 	fmt.Println("file fields: ", f.fields)
+
+	connector.CreateRepository(f.fields)
 }
 
 func createRegister(register string, f *file) {
@@ -71,9 +75,8 @@ func createRegister(register string, f *file) {
 
 	if len(reg) != f.fieldsLenght {
 		//todo save the error line in a file error
-		return
 	} else {
-		fmt.Println("new register: ", reg)
+		connector.SendDataToLoad(reg)
 	}
 }
 
