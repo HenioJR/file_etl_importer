@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	fmt.Println("Starting main function...")
+	fmt.Println("Starting file ETL importer...")
 
 	extract.ReadCsvFile()
 }
