@@ -144,11 +144,11 @@ func NewDatabasePostgres() *Postgres {
 	log := log.NewLogger("postgreSQL")
 	self := Postgres{
 		Driver:       "postgres",
-		User:         "henio",
-		Password:     "hobj10",
-		Port:         "5433",
-		Dbname:       "repositorio",
-		Host:         "replica.neoway.com.br",
+		User:         "x",
+		Password:     "x",
+		Port:         "x",
+		Dbname:       "x",
+		Host:         "x",
 		MaxOpenConns: 50,
 		MaxIdleConns: 10,
 		database:     "testes_henio",
