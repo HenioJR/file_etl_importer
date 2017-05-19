@@ -95,6 +95,31 @@ func (self *Postgres) Insert(stmt *sql.Tx, table string, values []string) error 
 	return nil
 }
 
+func (self *Postgres) InsertBatch(stmt *sql.Tx, table string, registerList []string) error {
+
+	start := time.Now()
+
+	query := "INSERT INTO " + self.database + "." + table + " VALUES "
+
+	for i := 0; i < len(registerList); i++ {
+		reg := strings.Split(registerList[i], ",")
+		query += "('" + strings.Join(reg, "','") + "'),"
+	}
+	query = strings.TrimRight(query, ",")
+	query += ";"
+
+	_, err := stmt.Exec(query)
+
+	if err != nil {
+		self.log.Warnf("[Insert] ", err)
+	}
+
+	totalTime := time.Now().Sub(start)
+
+	fmt.Println("time insert: ", totalTime)
+	return nil
+}
+
 func (self *Postgres) Delete(stmt *sql.Tx, table string, fields []string, values []interface{}) error {
 	var stringValues []string
 	for i := range values {
