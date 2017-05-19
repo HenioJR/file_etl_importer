@@ -59,7 +59,6 @@ func createFields(fields string, f *file) {
 	f.fieldsLenght = len(fiel)
 	f.fields = fiel
 
-	fmt.Println("file fields length: ", f.fieldsLenght)
 	fmt.Println("file fields: ", f.fields)
 
 	f.connec.CreateRepository(f.fields)

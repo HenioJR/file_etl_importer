@@ -1,9 +1,9 @@
 (next)
-  - Create config file
   - Validate data line by line, before insert on slice
 
 (on going):
   - Insert data in repository postgreSQL on batch (Henio Bez)
+  - Create config file (Henio Bez)
 
 0.1:
   - Read CSV file (Henio Bez)
