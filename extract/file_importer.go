@@ -2,7 +2,6 @@ package extract
 
 import (
 	"bufio"
-	"database/sql"
 	"fmt"
 	"os"
 	"strings"
@@ -22,20 +21,8 @@ func ReadCsvFile() {
 	read(f)
 }
 
-/*
-func read() {
-	filePath, _ := filepath.Abs("./test_file_10K.csv")
-
-	log.NewLogger("file_importer").Debugf("test debug")
-
-	data, error := ioutil.ReadFile(filePath)
-
-	checkError(error)
-	fmt.Println(string(data))
-}*/
-
 func read(f *file) {
-	file, error := os.Open("/home/henio/go/src/file_etl_importer/test_file_10.csv")
+	file, error := os.Open("/home/henio/go/src/file_etl_importer/test_file_10K.csv")
 	checkError(error)
 
 	defer file.Close()
@@ -44,20 +31,22 @@ func read(f *file) {
 
 	count := 0
 
-	stmt, _ := f.connec.Database.BeginTransaction()
+	var registerList []string
+
 	for scanner.Scan() {
 		if count == 0 {
 			fields := scanner.Text()
 			createFields(fields, f)
 			count++
 		} else {
-			register := scanner.Text()
-			createRegister(register, f, stmt)
+			registerList = append(registerList, scanner.Text())
 			count++
 			//break
-			fmt.Println(count)
 		}
 	}
+
+	stmt, _ := f.connec.Database.BeginTransaction()
+	f.connec.SendDataToLoad(registerList, stmt)
 	f.connec.Database.Commit(stmt)
 
 	fmt.Println("Number of processed rows: ", count-1)
@@ -70,19 +59,19 @@ func createFields(fields string, f *file) {
 	f.fieldsLenght = len(fiel)
 	f.fields = fiel
 
-	fmt.Println("file fields length: ", f.fieldsLenght)
 	fmt.Println("file fields: ", f.fields)
 
 	f.connec.CreateRepository(f.fields)
 }
 
-func createRegister(register string, f *file, stmt *sql.Tx) {
+func createRegister(register string, fieldsLenght int) []string {
 	reg := strings.Split(register, ",")
 
-	if len(reg) != f.fieldsLenght {
+	if len(reg) != fieldsLenght {
 		//todo save the error line in a file error
+		return nil
 	} else {
-		f.connec.SendDataToLoad(reg, stmt)
+		return reg
 	}
 }
 

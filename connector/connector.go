@@ -34,12 +34,12 @@ func (self *Connector) CreateRepository(fields []string) {
 	}
 }
 
-func (self *Connector) SendDataToLoad(values []string, stmt *sql.Tx) {
+func (self *Connector) SendDataToLoad(registerList []string, stmt *sql.Tx) {
 	//fmt.Println("new register: ", reg)
 
 	switch self.name {
 	case "postgreSQL":
-		self.Database.Insert(stmt, "file_imported", values)
+		self.Database.InsertBatch(stmt, "file_imported", registerList)
 		//self.Database.Commit(stmt)
 	case "mongoDB":
 		//

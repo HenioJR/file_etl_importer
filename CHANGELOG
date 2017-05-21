@@ -1,0 +1,12 @@
+(next)
+  - Validate data line by line, before insert on slice
+
+(on going):
+  - Insert data in repository postgreSQL on batch (Henio Bez)
+  - Create config file (Henio Bez)
+
+0.1:
+  - Read CSV file (Henio Bez)
+  - Connect to repository postgreSQL (Henio Bez)
+  - Create table in repository postgreSQL (Henio Bez)
+  - Insert data in repository postgreSQL (Henio Bez)

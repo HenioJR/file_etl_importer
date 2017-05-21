@@ -7,6 +7,7 @@ import (
 	"strings"
 	"time"
 
+	"file_etl_importer/config"
 	"file_etl_importer/log"
 
 	_ "github.com/lib/pq"
@@ -68,6 +69,9 @@ func (self *Postgres) CreateDatabasePostgres(stmt *sql.Tx, columns []string, tab
 }
 
 func (self *Postgres) BeginTransaction() (*sql.Tx, error) {
+
+	fmt.Println("BeginTransaction")
+
 	stmt, err := self.dbPool.Begin()
 	if err != nil {
 		self.log.Warnf("[BeginTransaction] Begin", err)
@@ -82,6 +86,31 @@ func (self *Postgres) Insert(stmt *sql.Tx, table string, values []string) error 
 	start := time.Now()
 
 	query := "INSERT INTO " + self.database + "." + table + " VALUES ('" + strings.Join(values, "','") + "');"
+
+	_, err := stmt.Exec(query)
+
+	if err != nil {
+		self.log.Warnf("[Insert] ", err)
+	}
+
+	totalTime := time.Now().Sub(start)
+
+	fmt.Println("time insert: ", totalTime)
+	return nil
+}
+
+func (self *Postgres) InsertBatch(stmt *sql.Tx, table string, registerList []string) error {
+
+	start := time.Now()
+
+	query := "INSERT INTO " + self.database + "." + table + " VALUES "
+
+	for i := 0; i < len(registerList); i++ {
+		reg := strings.Split(registerList[i], ",")
+		query += "('" + strings.Join(reg, "','") + "'),"
+	}
+	query = strings.TrimRight(query, ",")
+	query += ";"
 
 	_, err := stmt.Exec(query)
 
@@ -141,19 +170,22 @@ func (self *Postgres) Commit(stmt *sql.Tx) error {
 }
 
 func NewDatabasePostgres() *Postgres {
+	c := config.GetConfig()
+
 	log := log.NewLogger("postgreSQL")
 	self := Postgres{
-		Driver:       "postgres",
-		User:         "x",
-		Password:     "x",
-		Port:         "x",
-		Dbname:       "x",
-		Host:         "x",
-		MaxOpenConns: 50,
-		MaxIdleConns: 10,
-		database:     "testes_henio",
+		Driver:       c.Database.Driver,
+		User:         c.Database.User,
+		Password:     c.Database.Password,
+		Port:         c.Database.Port,
+		Dbname:       c.Database.Dbname,
+		Host:         c.Database.Host,
+		MaxOpenConns: c.Database.MaxOpenConns,
+		MaxIdleConns: c.Database.MaxIdleConns,
+		database:     c.Database.Name,
 		log:          log,
 	}
+
 	self.getDb()
 
 	return &self
