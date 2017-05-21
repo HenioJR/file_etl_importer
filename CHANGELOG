@@ -1,7 +1,12 @@
 (next)
+  - Create go routines to insert multithread
+  - Split file to insert multithread
   - Validate data line by line, before insert on slice
 
 (on going):
+  - 
+
+0.2:
   - Insert data in repository postgreSQL on batch (Henio Bez)
   - Create config file (Henio Bez)
 
