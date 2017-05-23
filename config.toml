@@ -1,5 +1,13 @@
- [database]
- #[postgres]
+[file]
+pathName = "/home/henio/go/src/file_etl_importer/test_file_10K.csv"
+separator = ","
+
+[processing]
+numberOfThreads = 20
+batchSizeCommit = 1000
+
+[database]
+[database.postgres]
 driver = "postgres"
 user = "x"
 password = "x"
@@ -10,11 +18,4 @@ maxOpenConns = 50
 maxIdleConns = 10
 schemaOutput = "testes_henio"
 tableOutput = "file_imported"
-
-[file]
-pathName = "/home/henio/go/src/file_etl_importer/test_file_10K.csv"
-separator = ","
-
-[processing]
-numberOfThreads = 20
-batchSizeCommit = 1000
+[database.mongo]

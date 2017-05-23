@@ -13,16 +13,20 @@ type TomlConfig struct {
 }
 
 type databaseConfig struct {
-	Driver       string
-	User         string
-	Password     string
-	Port         string
-	Dbname       string
-	Host         string
-	MaxOpenConns int
-	MaxIdleConns int
-	SchemaOutput string
-	TableOutput  string
+	Postgres struct {
+		Driver       string `toml:"driver"`
+		User         string `toml:"user"`
+		Password     string `toml:"password"`
+		Port         string `toml:"port"`
+		Dbname       string `toml:"dbname"`
+		Host         string `toml:"host"`
+		MaxOpenConns int    `toml:"maxOpenConns"`
+		MaxIdleConns int    `toml:"maxIdleConns"`
+		SchemaOutput string `toml:"schemaOutput"`
+		TableOutput  string `toml:"tableOutput"`
+	} `toml:"postgres"`
+	Mongo struct {
+	} `toml:"mongo"`
 }
 
 type fileConfig struct {

@@ -129,16 +129,16 @@ func NewDatabasePostgres() *Postgres {
 
 	log := log.NewLogger("postgreSQL")
 	self := Postgres{
-		Driver:       c.Database.Driver,
-		User:         c.Database.User,
-		Password:     c.Database.Password,
-		Port:         c.Database.Port,
-		Dbname:       c.Database.Dbname,
-		Host:         c.Database.Host,
-		MaxOpenConns: c.Database.MaxOpenConns,
-		MaxIdleConns: c.Database.MaxIdleConns,
-		schemaOutput: c.Database.SchemaOutput,
-		tableOutput:  c.Database.TableOutput,
+		Driver:       c.Database.Postgres.Driver,
+		User:         c.Database.Postgres.User,
+		Password:     c.Database.Postgres.Password,
+		Port:         c.Database.Postgres.Port,
+		Dbname:       c.Database.Postgres.Dbname,
+		Host:         c.Database.Postgres.Host,
+		MaxOpenConns: c.Database.Postgres.MaxOpenConns,
+		MaxIdleConns: c.Database.Postgres.MaxIdleConns,
+		schemaOutput: c.Database.Postgres.SchemaOutput,
+		tableOutput:  c.Database.Postgres.TableOutput,
 		log:          log,
 	}
 
