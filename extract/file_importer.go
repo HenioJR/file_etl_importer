@@ -10,6 +10,7 @@ import (
 
 	"file_etl_importer/config"
 	"file_etl_importer/connector"
+	"file_etl_importer/transform"
 )
 
 type file struct {
@@ -38,23 +39,29 @@ func read(f file) {
 	page := 0
 	numberOfThreads := 0
 	maxThreads := c.Processing.NumberOfThreads
+	batchSize := c.Processing.BatchSizeCommit
+	separator := c.File.Separator
 
 	var registerList []string
-	batchSize := c.Processing.BatchSizeCommit
 
 	var wg sync.WaitGroup
 
 	for scanner.Scan() {
 		if count == 0 {
 			// create fields with head file
-			fiel := strings.Split(scanner.Text(), ",")
+			line := scanner.Text()
+			line = transform.RemoveQuotes(line)
+			fiel := strings.Split(line, separator)
 			f.fieldsLenght = len(fiel)
 			f.fields = fiel
 			fmt.Println("file fields: ", f.fields)
 			f.connec.CreateRepository(f.fields)
 			count++
 		} else {
-			registerList = append(registerList, scanner.Text())
+			line := scanner.Text()
+			line = transform.RemoveQuotes(line)
+
+			registerList = append(registerList, line)
 			count++
 
 			if count%batchSize == 0 {
@@ -82,31 +89,14 @@ func read(f file) {
 					numberOfThreads--
 					wg.Done()
 				}()
-
-				//registerList = nil
 			}
 		}
 	}
-	//https://nathanleclaire.com/blog/2014/02/15/how-to-wait-for-all-goroutines-to-finish-executing-before-continuing/
-	//time.Sleep(1000000000000)
-
-	fmt.Println("Finished. wg.Wait now...")
 
 	wg.Wait()
 
 	fmt.Println("Number of processed rows: ", count-1)
 
-}
-
-func createRegister(register string, fieldsLenght int) []string {
-	reg := strings.Split(register, ",")
-
-	if len(reg) != fieldsLenght {
-		//todo save the error line in a file error
-		return nil
-	} else {
-		return reg
-	}
 }
 
 func checkError(e error) {
