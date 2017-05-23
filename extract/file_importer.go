@@ -43,14 +43,13 @@ func read(f file) {
 	separator := c.File.Separator
 
 	var registerList []string
-
 	var wg sync.WaitGroup
 
 	for scanner.Scan() {
+		line := scanner.Text()
+		line = transform.RemoveQuotes(line)
 		if count == 0 {
 			// create fields with head file
-			line := scanner.Text()
-			line = transform.RemoveQuotes(line)
 			fiel := strings.Split(line, separator)
 			f.fieldsLenght = len(fiel)
 			f.fields = fiel
@@ -58,37 +57,39 @@ func read(f file) {
 			f.connec.CreateRepository(f.fields)
 			count++
 		} else {
-			line := scanner.Text()
-			line = transform.RemoveQuotes(line)
+			// process data lines
+			if len(strings.Split(line, separator)) != f.fieldsLenght {
+				fmt.Println("Line data size error: ", line)
+			} else {
+				registerList = append(registerList, line)
+				count++
 
-			registerList = append(registerList, line)
-			count++
+				if count%batchSize == 0 {
+					for maxThreads <= numberOfThreads {
+						fmt.Println("sleeping...")
+						time.Sleep(2 * time.Second)
+					}
+					wg.Add(1)
+					go func() {
+						numberOfThreads++
 
-			if count%batchSize == 0 {
-				for maxThreads <= numberOfThreads {
-					fmt.Println("sleeping...")
-					time.Sleep(2 * time.Second)
+						start := page * batchSize
+						end := start + batchSize
+						page++
+
+						fmt.Print("sendData --- ")
+						fmt.Print("start: ", start)
+						fmt.Println(" - end: ", end)
+
+						regListCopy := registerList[start:end]
+
+						stmt, _ := f.connec.Database.BeginTransaction()
+						f.connec.SendDataToLoad(regListCopy, stmt)
+						f.connec.Database.Commit(stmt)
+						numberOfThreads--
+						wg.Done()
+					}()
 				}
-				wg.Add(1)
-				go func() {
-					fmt.Println(">>>>>>>>>>>>>>>>>>>>>> sendData <<<<<<<<<<<<<<<<<<<<<<<")
-					numberOfThreads++
-
-					start := page * batchSize
-					end := start + batchSize
-					page++
-
-					fmt.Print("start: ", start)
-					fmt.Println(" - end: ", end)
-
-					regListCopy := registerList[start:end]
-
-					stmt, _ := f.connec.Database.BeginTransaction()
-					f.connec.SendDataToLoad(regListCopy, stmt)
-					f.connec.Database.Commit(stmt)
-					numberOfThreads--
-					wg.Done()
-				}()
 			}
 		}
 	}

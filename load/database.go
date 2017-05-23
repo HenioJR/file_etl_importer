@@ -69,9 +69,6 @@ func (self *Postgres) CreateDatabasePostgres(stmt *sql.Tx, columns []string) {
 }
 
 func (self *Postgres) BeginTransaction() (*sql.Tx, error) {
-
-	fmt.Println("BeginTransaction")
-
 	stmt, err := self.dbPool.Begin()
 	if err != nil {
 		self.log.Warnf("[BeginTransaction] Begin", err)
@@ -105,7 +102,7 @@ func (self *Postgres) InsertBatch(stmt *sql.Tx, registerList []string) error {
 
 	totalTime := time.Now().Sub(start)
 
-	fmt.Println("time insert: ", totalTime)
+	fmt.Println("time batch insert: ", totalTime)
 	return nil
 }
 
