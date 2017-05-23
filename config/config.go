@@ -21,7 +21,8 @@ type databaseConfig struct {
 	Host         string
 	MaxOpenConns int
 	MaxIdleConns int
-	Name         string
+	SchemaOutput string
+	TableOutput  string
 }
 
 type fileConfig struct {

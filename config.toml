@@ -1,18 +1,20 @@
-[database]
+ [database]
+ #[postgres]
 driver = "postgres"
-user = "henio"
+user = "x"
 password = "x"
 port = "x"
 dbname = "repositorio"
 host = "x"
 maxOpenConns = 50
 maxIdleConns = 10
-name = "testes_henio"
+schemaOutput = "testes_henio"
+tableOutput = "file_imported"
 
 [file]
 pathName = "/home/henio/go/src/file_etl_importer/test_file_10K.csv"
 separator = ","
 
 [processing]
-numberOfThreads = 1
+numberOfThreads = 20
 batchSizeCommit = 1000
