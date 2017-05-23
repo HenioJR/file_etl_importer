@@ -106,8 +106,11 @@ func (self *Postgres) InsertBatch(stmt *sql.Tx, table string, registerList []str
 	query := "INSERT INTO " + self.database + "." + table + " VALUES "
 
 	for i := 0; i < len(registerList); i++ {
-		reg := strings.Split(registerList[i], ",")
-		query += "('" + strings.Join(reg, "','") + "'),"
+		if registerList[i] != "" {
+			reg := strings.Split(registerList[i], ",")
+			query += "('" + strings.Join(reg, "','") + "'),"
+		}
+
 	}
 	query = strings.TrimRight(query, ",")
 	query += ";"
