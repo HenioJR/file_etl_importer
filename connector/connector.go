@@ -25,7 +25,7 @@ func (self *Connector) CreateRepository(fields []string) {
 		if err != nil {
 			fmt.Println("CreateRepository: ", err)
 		} else {
-			self.Database.CreateDatabasePostgres(stmt, fields, "file_imported")
+			self.Database.CreateDatabasePostgres(stmt, fields)
 		}
 	case "mongoDB":
 		//
@@ -39,7 +39,7 @@ func (self *Connector) SendDataToLoad(registerList []string, stmt *sql.Tx) {
 
 	switch self.name {
 	case "postgreSQL":
-		self.Database.InsertBatch(stmt, "file_imported", registerList)
+		self.Database.InsertBatch(stmt, registerList)
 		//self.Database.Commit(stmt)
 	case "mongoDB":
 		//

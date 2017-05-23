@@ -3,7 +3,6 @@ package load
 import (
 	"database/sql"
 	"fmt"
-	"strconv"
 	"strings"
 	"time"
 
@@ -25,7 +24,8 @@ type Postgres struct {
 	log          log.Logger
 	dbPool       *sql.DB
 	dbErr        error
-	database     string
+	schemaOutput string
+	tableOutput  string
 }
 
 func (self *Postgres) getDb() {
@@ -53,12 +53,12 @@ func (self *Postgres) getConnectionString() (connectionString string) {
 	return "sslmode=disable host=" + self.Host + " database=" + self.Dbname + " port=" + self.Port + " user=" + self.User + " password=" + self.Password
 }
 
-func (self *Postgres) CreateDatabasePostgres(stmt *sql.Tx, columns []string, tableName string) {
+func (self *Postgres) CreateDatabasePostgres(stmt *sql.Tx, columns []string) {
 	columnsPrepared := strings.Join(columns, " text,")
 	columnsPrepared += " text"
 
-	stmt.Exec("DROP TABLE IF EXISTS " + self.database + "." + tableName + ";")
-	_, err := stmt.Exec("CREATE TABLE " + self.database + "." + tableName + " (" + columnsPrepared + " );")
+	stmt.Exec("DROP TABLE IF EXISTS " + self.schemaOutput + "." + self.tableOutput + ";")
+	_, err := stmt.Exec("CREATE TABLE " + self.schemaOutput + "." + self.tableOutput + " (" + columnsPrepared + " );")
 
 	if err != nil {
 		fmt.Println("[CreateDatabasePostgres] Exec", err)
@@ -81,33 +81,18 @@ func (self *Postgres) BeginTransaction() (*sql.Tx, error) {
 	return stmt, nil
 }
 
-func (self *Postgres) Insert(stmt *sql.Tx, table string, values []string) error {
+func (self *Postgres) InsertBatch(stmt *sql.Tx, registerList []string) error {
 
 	start := time.Now()
 
-	query := "INSERT INTO " + self.database + "." + table + " VALUES ('" + strings.Join(values, "','") + "');"
-
-	_, err := stmt.Exec(query)
-
-	if err != nil {
-		self.log.Warnf("[Insert] ", err)
-	}
-
-	totalTime := time.Now().Sub(start)
-
-	fmt.Println("time insert: ", totalTime)
-	return nil
-}
-
-func (self *Postgres) InsertBatch(stmt *sql.Tx, table string, registerList []string) error {
-
-	start := time.Now()
-
-	query := "INSERT INTO " + self.database + "." + table + " VALUES "
+	query := "INSERT INTO " + self.schemaOutput + "." + self.tableOutput + " VALUES "
 
 	for i := 0; i < len(registerList); i++ {
-		reg := strings.Split(registerList[i], ",")
-		query += "('" + strings.Join(reg, "','") + "'),"
+		if registerList[i] != "" {
+			reg := strings.Split(registerList[i], ",")
+			query += "('" + strings.Join(reg, "','") + "'),"
+		}
+
 	}
 	query = strings.TrimRight(query, ",")
 	query += ";"
@@ -121,36 +106,6 @@ func (self *Postgres) InsertBatch(stmt *sql.Tx, table string, registerList []str
 	totalTime := time.Now().Sub(start)
 
 	fmt.Println("time insert: ", totalTime)
-	return nil
-}
-
-func (self *Postgres) Delete(stmt *sql.Tx, table string, fields []string, values []interface{}) error {
-	var stringValues []string
-	for i := range values {
-		stringValues = append(stringValues, (fields[i] + " = $" + strconv.Itoa(i+1)))
-	}
-
-	stmtPrepared, err := stmt.Prepare("DELETE FROM " + self.database + "." + table + " WHERE " + strings.Join(stringValues, " AND ") + ";")
-	if err != nil {
-		self.log.Warnf("[Delete] Prepare", err)
-		errRollback := stmt.Rollback()
-		if errRollback != nil {
-			self.log.Warnf("[Delete] Rollback", errRollback)
-			return errRollback
-		}
-		return err
-	}
-	_, err = stmtPrepared.Exec(values...)
-	if err != nil {
-		self.log.Warnf("[Delete] Exec", err)
-		errRollback := stmt.Rollback()
-		if errRollback != nil {
-			self.log.Warnf("[Delete] Rollback", errRollback)
-			return errRollback
-		}
-		return err
-	}
-
 	return nil
 }
 
@@ -174,15 +129,16 @@ func NewDatabasePostgres() *Postgres {
 
 	log := log.NewLogger("postgreSQL")
 	self := Postgres{
-		Driver:       c.Database.Driver,
-		User:         c.Database.User,
-		Password:     c.Database.Password,
-		Port:         c.Database.Port,
-		Dbname:       c.Database.Dbname,
-		Host:         c.Database.Host,
-		MaxOpenConns: c.Database.MaxOpenConns,
-		MaxIdleConns: c.Database.MaxIdleConns,
-		database:     c.Database.Name,
+		Driver:       c.Database.Postgres.Driver,
+		User:         c.Database.Postgres.User,
+		Password:     c.Database.Postgres.Password,
+		Port:         c.Database.Postgres.Port,
+		Dbname:       c.Database.Postgres.Dbname,
+		Host:         c.Database.Postgres.Host,
+		MaxOpenConns: c.Database.Postgres.MaxOpenConns,
+		MaxIdleConns: c.Database.Postgres.MaxIdleConns,
+		schemaOutput: c.Database.Postgres.SchemaOutput,
+		tableOutput:  c.Database.Postgres.TableOutput,
 		log:          log,
 	}
 
