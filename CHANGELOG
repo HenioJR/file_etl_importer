@@ -2,6 +2,9 @@
   - Validate data line by line, before insert on slice
 
 (on going):
+  - 
+
+0.3
   - Create go routines to insert multithread
 
 0.2:
