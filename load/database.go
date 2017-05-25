@@ -13,19 +13,20 @@ import (
 )
 
 type Postgres struct {
-	Driver       string
-	User         string
-	Password     string
-	Port         string
-	Dbname       string
-	Host         string
-	MaxOpenConns int
-	MaxIdleConns int
-	log          log.Logger
-	dbPool       *sql.DB
-	dbErr        error
-	schemaOutput string
-	tableOutput  string
+	Driver        string
+	User          string
+	Password      string
+	Port          string
+	Dbname        string
+	Host          string
+	MaxOpenConns  int
+	MaxIdleConns  int
+	log           log.Logger
+	dbPool        *sql.DB
+	dbErr         error
+	schemaOutput  string
+	tableOutput   string
+	fileSeparator string
 }
 
 func (self *Postgres) getDb() {
@@ -86,7 +87,7 @@ func (self *Postgres) InsertBatch(stmt *sql.Tx, registerList []string) error {
 
 	for i := 0; i < len(registerList); i++ {
 		if registerList[i] != "" {
-			reg := strings.Split(registerList[i], ",")
+			reg := strings.Split(registerList[i], self.fileSeparator)
 			query += "('" + strings.Join(reg, "','") + "'),"
 		}
 
@@ -126,17 +127,18 @@ func NewDatabasePostgres() *Postgres {
 
 	log := log.NewLogger("postgreSQL")
 	self := Postgres{
-		Driver:       c.Database.Postgres.Driver,
-		User:         c.Database.Postgres.User,
-		Password:     c.Database.Postgres.Password,
-		Port:         c.Database.Postgres.Port,
-		Dbname:       c.Database.Postgres.Dbname,
-		Host:         c.Database.Postgres.Host,
-		MaxOpenConns: c.Database.Postgres.MaxOpenConns,
-		MaxIdleConns: c.Database.Postgres.MaxIdleConns,
-		schemaOutput: c.Database.Postgres.SchemaOutput,
-		tableOutput:  c.Database.Postgres.TableOutput,
-		log:          log,
+		Driver:        c.Database.Postgres.Driver,
+		User:          c.Database.Postgres.User,
+		Password:      c.Database.Postgres.Password,
+		Port:          c.Database.Postgres.Port,
+		Dbname:        c.Database.Postgres.Dbname,
+		Host:          c.Database.Postgres.Host,
+		MaxOpenConns:  c.Database.Postgres.MaxOpenConns,
+		MaxIdleConns:  c.Database.Postgres.MaxIdleConns,
+		schemaOutput:  c.Database.Postgres.SchemaOutput,
+		tableOutput:   c.Database.Postgres.TableOutput,
+		log:           log,
+		fileSeparator: c.File.Separator,
 	}
 
 	self.getDb()
