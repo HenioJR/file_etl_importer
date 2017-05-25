@@ -1,10 +1,11 @@
 [file]
-pathName = "/home/henio/go/src/file_etl_importer/test_file_10K.csv"
+pathName = "/home/henio/neoway/especializacao_tcc/files/test_file_100K.csv"
 separator = ","
 
 [processing]
-numberOfThreads = 20
-batchSizeCommit = 1000
+numberOfThreads = 40
+batchSizeCommit = 500
+validateLineByLine = true
 
 [database]
 [database.postgres]
@@ -12,7 +13,7 @@ driver = "postgres"
 user = "x"
 password = "x"
 port = "x"
-dbname = "repositorio"
+dbname = "x"
 host = "x"
 maxOpenConns = 50
 maxIdleConns = 10

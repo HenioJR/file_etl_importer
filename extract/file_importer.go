@@ -58,7 +58,7 @@ func read(f file) {
 			count++
 		} else {
 			// process data lines
-			if len(strings.Split(line, separator)) != f.fieldsLenght {
+			if c.Processing.ValidateLineByLine && len(strings.Split(line, separator)) != f.fieldsLenght {
 				fmt.Println("Line data size error: ", line)
 			} else {
 				registerList = append(registerList, line)

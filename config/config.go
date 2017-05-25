@@ -35,8 +35,9 @@ type fileConfig struct {
 }
 
 type processingConfig struct {
-	NumberOfThreads int
-	BatchSizeCommit int
+	NumberOfThreads    int
+	BatchSizeCommit    int
+	ValidateLineByLine bool
 }
 
 func GetConfig() TomlConfig {
