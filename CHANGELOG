@@ -2,6 +2,9 @@
   - 
 
 (on going):
+  - 
+
+0.4
   - Validate data line by line, before insert on slice (Henio Bez)
   - Transformation to remove quotes line by line (Henio Bez)
 
