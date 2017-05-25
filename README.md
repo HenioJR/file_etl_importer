@@ -1,8 +1,12 @@
 # file_etl_importer
 
-This is an open source tool to import csv files, do any work (data transformation or/and data cleasing) and load data on repository (like relational or non relational DB, queues).
+This is an open source tool to import files, do any work (data transformation or/and data cleasing) and load data on repository (like relational or non relational DB, queues).
 
 ## Features
+
+- Read file (tested using csv and txt extensions =) )
+- Transform data
+- Load data in database (working to PostgreSQL connection; more databases soon)
 
 ## Dependencies
 
@@ -16,7 +20,7 @@ This is an open source tool to import csv files, do any work (data transformatio
 
 In config file, you need to configurate parameters to read file, to connect database and to processing load.
 
-The config file is in project root path, named **config.toml**
+The config file is in project root path, named **config.toml**.
 
 Bellow, an example:
 ```
@@ -27,6 +31,7 @@ separator = ","
 [processing]
 numberOfThreads = 20
 batchSizeCommit = 500
+validateLineByLine = true #true to validate parameters length, line by line
 
 [database]
 [database.postgres]
@@ -38,9 +43,10 @@ dbname = "x"
 host = "x"
 maxOpenConns = 50
 maxIdleConns = 10
-schemaOutput = "x"
-tableOutput = "x"
+schemaOutput = "x" #schema to save imported data
+tableOutput = "x" #table to save imported data
 [database.mongo]
+#to do
 ```
 
 ## Install and Execute
@@ -53,6 +59,8 @@ go get github.com/lib/pq
 go get github.com/NeowayLabs/logger
 go get github.com/julienschmidt/httprouter
 ```
+
+Set **config.toml** file as you wish.
 
 After that, you can build project:
 ```sh
