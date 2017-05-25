@@ -1,11 +1,15 @@
 (next)
-  - Validate data line by line, before insert on slice
+  - 
 
 (on going):
   - 
 
+0.4
+  - Validate data line by line, before insert on slice (Henio Bez)
+  - Transformation to remove quotes line by line (Henio Bez)
+
 0.3
-  - Create go routines to insert multithread
+  - Create go routines to insert multithread (Henio Bez)
 
 0.2:
   - Insert data in repository postgreSQL on batch (Henio Bez)
