@@ -5,7 +5,7 @@ separator = ","
 [processing]
 numberOfThreads = 40
 batchSizeCommit = 500
-validateLineByLine = true
+validateLineByLine = true #true to validate parameters length, line by line
 
 [database]
 [database.postgres]
@@ -17,6 +17,7 @@ dbname = "x"
 host = "x"
 maxOpenConns = 50
 maxIdleConns = 10
-schemaOutput = "testes_henio"
-tableOutput = "file_imported"
+schemaOutput = "x" #schema to save imported data
+tableOutput = "x" #table to save imported data
 [database.mongo]
+#to do
