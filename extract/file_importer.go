@@ -77,15 +77,8 @@ func read(f file) {
 						end := start + batchSize
 						page++
 
-						fmt.Print("sendData --- ")
-						fmt.Print("start: ", start)
-						fmt.Println(" - end: ", end)
+						saveBatch(registerList, f, start, end)
 
-						regListCopy := registerList[start:end]
-
-						stmt, _ := f.connec.Database.BeginTransaction()
-						f.connec.SendDataToLoad(regListCopy, stmt)
-						f.connec.Database.Commit(stmt)
 						numberOfThreads--
 						wg.Done()
 					}()
@@ -93,10 +86,30 @@ func read(f file) {
 			}
 		}
 	}
-
 	wg.Wait()
 
+	// save last incomplete batch, if necessary
+	start := page * batchSize
+	end := len(registerList)
+	if start < len(registerList) {
+		saveBatch(registerList, f, start, end)
+	}
+
 	fmt.Println("Number of processed rows: ", count-1)
+
+}
+
+func saveBatch(registerList []string, f file, start int, end int) {
+
+	fmt.Print("sendData --- ")
+	fmt.Print("start: ", start)
+	fmt.Println(" - end: ", end)
+
+	regListCopy := registerList[start:end]
+
+	stmt, _ := f.connec.Database.BeginTransaction()
+	f.connec.SendDataToLoad(regListCopy, stmt)
+	f.connec.Database.Commit(stmt)
 
 }
 
