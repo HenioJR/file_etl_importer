@@ -55,6 +55,15 @@ func (self *Postgres) getConnectionString() (connectionString string) {
 }
 
 func (self *Postgres) CreateDatabasePostgres(stmt *sql.Tx, columns []string) {
+	//put quotes if have spaces in column name
+	for i := 0; i < len(columns); i++ {
+		a := columns[i]
+		b := strings.Split(a, " ")
+		if len(b) > 1 {
+			columns[i] = "\"" + columns[i] + "\""
+		}
+	}
+
 	columnsPrepared := strings.Join(columns, " text,")
 	columnsPrepared += " text"
 
