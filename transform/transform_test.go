@@ -5,12 +5,12 @@ import (
 )
 
 func TestRemoveQuotes(t *testing.T) {
-	var a = "bus_\"zipcode\""
-	var mockResult = "bus_zipcode"
-	a = RemoveQuotes(a)
+	var a = "\"test1\",\"test2\",\"tes\"t3\""
+	var mockResult = "\"test1\",\"test2\",\"tes t3\""
+	a = RemoveQuotesInsideString(a)
 
 	if a != mockResult {
-		t.Error("Error or transform.RemoveQuotes")
+		t.Error("Error or TestRemoveQuotes: ", a)
 	}
 }
 
@@ -20,6 +20,16 @@ func TestTransformRemoveParenthesis(t *testing.T) {
 	a = RemoveParenthesis(a)
 
 	if a != mockResult {
-		t.Error("Error or transform.RemoveParenthesis")
+		t.Error("TestTransformRemoveParenthesis: ", a)
+	}
+}
+
+func TestTransformRemoveSeparator(t *testing.T) {
+	var a = "\"test1\",\"test2\",\"tes, t3\""
+	var mockResult = "\"test1\",\"test2\",\"tes t3\""
+	a = RemoveSeparatorInsideString(a)
+
+	if a != mockResult {
+		t.Error("TestTransformRemoveSeparator: ", a)
 	}
 }
