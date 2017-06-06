@@ -47,7 +47,7 @@ func read(f file) {
 
 	for scanner.Scan() {
 		line := scanner.Text()
-		line = transform.RemoveQuotes(line)
+		line = transform.RemoveQuotesInsideString(line)
 		line = transform.RemoveParenthesis(line)
 		if count == 0 {
 			// create fields with head file

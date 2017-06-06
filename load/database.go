@@ -57,7 +57,7 @@ func (self *Postgres) getConnectionString() (connectionString string) {
 func (self *Postgres) CreateDatabasePostgres(stmt *sql.Tx, columns []string) {
 	//put quotes if have spaces in column name
 	for i := 0; i < len(columns); i++ {
-		a := columns[i]
+		a := strings.TrimSpace(columns[i])
 		b := strings.Split(a, " ")
 		if len(b) > 1 {
 			columns[i] = "\"" + columns[i] + "\""
@@ -108,6 +108,7 @@ func (self *Postgres) InsertBatch(stmt *sql.Tx, registerList []string) error {
 
 	if err != nil {
 		self.log.Warnf("[Insert] ", err)
+		//self.log.Warnf("Query: ", query)
 	}
 
 	totalTime := time.Now().Sub(start)
