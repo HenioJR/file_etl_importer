@@ -49,8 +49,10 @@ func read(f file) {
 		line := scanner.Text()
 		line = transform.RemoveQuotesInsideString(line)
 		line = transform.RemoveParenthesis(line)
+		//line = transform.RemoveSeparatorInsideString(line)
 		if count == 0 {
 			// create fields with head file
+			line = transform.RemoveSpecialCharactersFromHeader(line)
 			fiel := strings.Split(line, separator)
 			f.fieldsLenght = len(fiel)
 			f.fields = fiel

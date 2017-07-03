@@ -17,6 +17,12 @@ func RemoveParenthesis(s string) string {
 	return s
 }
 
+func RemoveSpecialCharactersFromHeader(s string) string {
+	s = strings.Replace(s, "/", " ", -1)
+	s = strings.Replace(s, "\\", " ", -1)
+	return s
+}
+
 func RemoveSeparatorInsideString(s string) string {
 	// change to use separator of config file
 	//c := config.GetConfig()
