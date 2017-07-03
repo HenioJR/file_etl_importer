@@ -66,6 +66,7 @@ func (self *Postgres) CreateDatabasePostgres(stmt *sql.Tx, columns []string) {
 
 	columnsPrepared := strings.Join(columns, " text,")
 	columnsPrepared += " text"
+	columnsPrepared = strings.Replace(columnsPrepared, "\"\"", "\"", -1)
 
 	stmt.Exec("DROP TABLE IF EXISTS " + self.schemaOutput + "." + self.tableOutput + ";")
 	_, err := stmt.Exec("CREATE TABLE " + self.schemaOutput + "." + self.tableOutput + " (" + columnsPrepared + " );")
