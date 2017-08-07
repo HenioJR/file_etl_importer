@@ -47,9 +47,15 @@ func read(f file) {
 
 	for scanner.Scan() {
 		line := scanner.Text()
+
 		line = transform.RemoveQuotesInsideString(line)
 		line = transform.RemoveParenthesis(line)
 		//line = transform.RemoveSeparatorInsideString(line, separator)
+
+		if c.Processing.RemoveDoubleQuote {
+			line = transform.RemoveDoubleQuote(line)
+		}
+
 		if count == 0 {
 			// create fields with head file
 			line = transform.RemoveSpecialCharactersFromHeader(line)

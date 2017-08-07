@@ -46,3 +46,13 @@ func TestRemoveSeparatorInsideString(t *testing.T) {
 		t.Error("Error on TestRemoveSeparatorInsideString: ", a, mockResult)
 	}
 }
+
+func TestRemoveDoubleQuote(t *testing.T) {
+	var a = "\"string with quotes\""
+	var mockResult = "string with quotes"
+	a = RemoveDoubleQuote(a)
+
+	if a != mockResult {
+		t.Error("Error on TestRemoveDoubleQuote: ", a, mockResult)
+	}
+}

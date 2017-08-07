@@ -17,6 +17,11 @@ func RemoveParenthesis(s string) string {
 	return s
 }
 
+func RemoveDoubleQuote(s string) string {
+	s = strings.Replace(s, "\"", "", -1)
+	return s
+}
+
 func RemoveSpecialCharactersFromHeader(s string) string {
 	s = strings.Replace(s, "/", " ", -1)
 	s = strings.Replace(s, "\\", " ", -1)
