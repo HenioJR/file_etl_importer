@@ -38,6 +38,7 @@ type processingConfig struct {
 	NumberOfThreads    int
 	BatchSizeCommit    int
 	ValidateLineByLine bool
+	RemoveDoubleQuote  bool
 }
 
 func GetConfig() TomlConfig {

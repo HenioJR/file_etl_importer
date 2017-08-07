@@ -17,20 +17,26 @@ func RemoveParenthesis(s string) string {
 	return s
 }
 
-func RemoveSeparatorInsideString(s string) string {
-	// change to use separator of config file
-	//c := config.GetConfig()
-	//separator := c.File.Separator
-	re1 := regexp.MustCompile(`\b,\b`)
-	//fmt.Println("separator: ", separator)
-	//regex1 := `\b` + separator + `\b`
-	//fmt.Println(regex1)
-	//re1 := regexp.MustCompile(regex1)
+func RemoveDoubleQuote(s string) string {
+	s = strings.Replace(s, "\"", "", -1)
+	return s
+}
+
+func RemoveSpecialCharactersFromHeader(s string) string {
+	s = strings.Replace(s, "/", " ", -1)
+	s = strings.Replace(s, "\\", " ", -1)
+	s = strings.Replace(s, "-", " ", -1)
+	return s
+}
+
+func RemoveSeparatorInsideString(line string, separator string) string {
+	//only work when have quotes on string
+	re1 := regexp.MustCompile(`\b` + separator + `\b`)
 	re2 := regexp.MustCompile(`\s,`)
 	re3 := regexp.MustCompile(`,\s`)
-	s = re1.ReplaceAllString(s, " ")
-	s = re2.ReplaceAllString(s, " ")
-	s = re3.ReplaceAllString(s, " ")
+	line = re1.ReplaceAllString(line, " ")
+	line = re2.ReplaceAllString(line, " ")
+	line = re3.ReplaceAllString(line, " ")
 
-	return s
+	return line
 }

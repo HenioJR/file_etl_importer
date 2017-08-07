@@ -1,11 +1,12 @@
 [file]
-pathName = "/home/henio/neoway/especializacao_tcc/files/test_file_100K.csv"
-separator = ","
+pathName = "/home/henio/neoway/especializacao_tcc/files/test_file_4,3K.csv"
+separator = ';'
 
 [processing]
 numberOfThreads = 40
 batchSizeCommit = 500
 validateLineByLine = true #true to validate parameters length, line by line
+removeDoubleQuote = true #true to remove double quote from all lines and all atributes
 
 [database]
 [database.postgres]
