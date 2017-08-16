@@ -32,6 +32,7 @@ separator = ","
 numberOfThreads = 20
 batchSizeCommit = 500
 validateLineByLine = true #true to validate parameters length, line by line
+removeDoubleQuote = true #true to remove double quote from all lines and all atributes
 
 [database]
 [database.postgres]
