@@ -8,9 +8,9 @@ import (
 	"sync"
 	"time"
 
-	"file_etl_importer/config"
-	"file_etl_importer/connector"
-	"file_etl_importer/transform"
+	"github.com/file_etl_importer/config"
+	"github.com/file_etl_importer/connector"
+	"github.com/file_etl_importer/transform"
 )
 
 type file struct {

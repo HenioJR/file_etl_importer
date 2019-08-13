@@ -6,8 +6,8 @@ import (
 	"strings"
 	"time"
 
-	"file_etl_importer/config"
-	"file_etl_importer/log"
+	"github.com/file_etl_importer/config"
+	"github.com/file_etl_importer/log"
 
 	_ "github.com/lib/pq"
 )

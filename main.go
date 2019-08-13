@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"file_etl_importer/extract"
+	"github.com/file_etl_importer/extract"
 )
 
 func main() {
