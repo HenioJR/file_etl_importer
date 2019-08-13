@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 
-	"file_etl_importer/load"
+	"github.com/file_etl_importer/load"
 )
 
 const (
